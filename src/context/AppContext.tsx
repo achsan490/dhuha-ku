@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Role, Student, DhuhaLog, QuizTopic, VerificationStatus, UserSession, NewStudentInput } from '../types';
+import { Role, Student, DhuhaLog, QuizTopic, VerificationStatus, UserSession, NewStudentInput, StudentReflectiveEntry } from '../types';
 import { INITIAL_STUDENTS, INITIAL_LOGS } from '../data/mockData';
 
 interface AppContextType {
@@ -24,7 +24,14 @@ interface AppContextType {
   quizSurahTag?: string;
   openQuizModal: (surahTag?: string) => void;
   closeQuizModal: () => void;
-  recordQuizResult: (score: number, topic: QuizTopic, attempts: number, durationSeconds: number) => void;
+  recordQuizResult: (
+    score: number,
+    topic: QuizTopic,
+    attempts: number,
+    durationSeconds: number,
+    reflectiveAnswer?: StudentReflectiveEntry,
+    isQuickAnswer?: boolean
+  ) => void;
   toastMessage: string | null;
   showToast: (msg: string) => void;
 }
@@ -278,7 +285,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       quizScore: logData.quizScore,
       quizAttempts: logData.quizAttempts ?? 0,
       quizDurationSeconds: logData.quizDurationSeconds,
+      isQuickAnswer: logData.isQuickAnswer ?? false,
       quizTopic: logData.quizTopic,
+      reflectiveAnswer: logData.reflectiveAnswer,
       verificationStatus: 'Menunggu',
       teacherNotes: ''
     };
@@ -352,7 +361,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setQuizSurahTag(undefined);
   };
 
-  const recordQuizResult = (score: number, topic: QuizTopic, attempts: number, durationSeconds: number) => {
+  const recordQuizResult = (
+    score: number,
+    topic: QuizTopic,
+    attempts: number,
+    durationSeconds: number,
+    reflectiveAnswer?: StudentReflectiveEntry,
+    isQuickAnswer?: boolean
+  ) => {
     setLogs(prev =>
       prev.map(l => {
         if (l.studentId === activeStudentId && l.date === todayStr) {
@@ -362,7 +378,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             quizScore: score,
             quizTopic: topic,
             quizAttempts: attempts,
-            quizDurationSeconds: durationSeconds
+            quizDurationSeconds: durationSeconds,
+            reflectiveAnswer: reflectiveAnswer ?? l.reflectiveAnswer,
+            isQuickAnswer: isQuickAnswer ?? l.isQuickAnswer
           };
         }
         return l;

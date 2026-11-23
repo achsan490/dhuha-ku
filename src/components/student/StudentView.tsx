@@ -83,7 +83,14 @@ export const StudentView: React.FC = () => {
       favoriteSurah: status === 'Ya' ? favoriteSurah : undefined,
       hasDoaAfterDhuha: status === 'Ya' ? hasDoaAfterDhuha : false,
       hafalanSurah: status === 'Ya' ? hafalanSurah : undefined,
-      hafalanStatus: status === 'Ya' ? hafalanStatus : undefined
+      hafalanStatus: status === 'Ya' ? hafalanStatus : undefined,
+      quizTaken: todayLog?.quizTaken,
+      quizScore: todayLog?.quizScore,
+      quizAttempts: todayLog?.quizAttempts,
+      quizDurationSeconds: todayLog?.quizDurationSeconds,
+      isQuickAnswer: todayLog?.isQuickAnswer,
+      quizTopic: todayLog?.quizTopic,
+      reflectiveAnswer: todayLog?.reflectiveAnswer
     });
   };
 

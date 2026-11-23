@@ -234,11 +234,11 @@ export const ReadingChecklist: React.FC<ReadingChecklistProps> = ({
             <div className="flex items-center justify-center sm:justify-start gap-1.5">
               <span className="font-extrabold text-sm">3. Kuis Kesadaran Dhuha</span>
               <span className="bg-amber-400 text-amber-950 font-black text-[9px] px-1.5 py-0.5 rounded uppercase">
-                3 Soal Ringkas
+                3 PG + 1 Refleksi
               </span>
             </div>
             <p className="text-xs text-emerald-100 mt-0.5">
-              Bukan ujian yang menegangkan, tapi penguat pemahaman & kesadaran ibadah.
+              Bukan ujian yang menegangkan, tapi penguat pemahaman fiqih & refleksi kejujuran hati.
             </p>
           </div>
         </div>

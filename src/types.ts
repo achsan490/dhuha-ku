@@ -76,12 +76,14 @@ export interface DhuhaLog {
   hafalanSurah?: string;
   hafalanStatus?: HafalanStatus;
 
-  // Indikator Kuis
+  // Indikator Kuis & Reflektif
   quizTaken: boolean;
   quizScore?: number; // 0-100
   quizAttempts?: number;
   quizDurationSeconds?: number;
+  isQuickAnswer?: boolean; // flag deteksi waktu terlalu cepat (< 50% estimasi)
   quizTopic?: QuizTopic;
+  reflectiveAnswer?: StudentReflectiveEntry;
 
   // Verifikasi Guru
   verificationStatus: VerificationStatus;
@@ -90,14 +92,35 @@ export interface DhuhaLog {
   teacherNotes?: string;
 }
 
+export type QuizDifficulty = 'medium' | 'hots';
+
 export interface QuizQuestion {
   id: string;
-  surahTag?: string;
   topic: QuizTopic;
+  difficulty?: QuizDifficulty;
+  surahTag?: string;
   question: string;
   options: string[];
   correctIndex: number;
   explanation: string;
+}
+
+export interface ReflectiveQuestion {
+  id: string;
+  category: 'Perasaan & Keikhlasan' | 'Kesadaran & Motivasi' | 'Kemandirian' | 'Bacaan & Pemahaman' | 'Sosial & Adab';
+  indicator: string;
+  question: string;
+  options?: string[];
+  isOpenEnded?: boolean;
+}
+
+export interface StudentReflectiveEntry {
+  questionId: string;
+  question: string;
+  indicator: string;
+  answer: string;
+  needsApproach?: boolean; // misal jika menjawab "terpaksa" atau "karena disuruh"
+  isMentorCandidate?: boolean; // misal aktif mengajak teman
 }
 
 export interface AwarenessMetrics {

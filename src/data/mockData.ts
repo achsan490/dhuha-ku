@@ -1,4 +1,5 @@
 import { Student, DhuhaLog, QuizQuestion } from '../types';
+import { ALL_QUIZ_QUESTIONS } from './questionBank';
 
 export const SURAH_OPTIONS = [
   { id: 'Ad-Dhuha', name: 'Ad-Dhuha', ayat: '11 Ayat', desc: 'Waktu Dhuha & Hiburan bagi Rasulullah' },
@@ -180,7 +181,14 @@ export const INITIAL_LOGS: DhuhaLog[] = [
     quizScore: 100,
     quizAttempts: 1,
     quizDurationSeconds: 45,
+    isQuickAnswer: false,
     quizTopic: 'Fiqih Dhuha',
+    reflectiveAnswer: {
+      questionId: 'ref-3',
+      question: 'Kenapa kamu sholat Dhuha hari ini?',
+      indicator: 'Rasio Inisiatif & Motivasi Internal',
+      answer: 'Karena ingin dekat dengan Allah SWT'
+    },
     verificationStatus: 'Disetujui',
     verifiedAt: '2026-11-15 08:30',
     verifiedBy: 'Ustadz Mansur, S.Pd.I',
@@ -226,8 +234,16 @@ export const INITIAL_LOGS: DhuhaLog[] = [
     quizTaken: true,
     quizScore: 70,
     quizAttempts: 2,
-    quizDurationSeconds: 90,
+    quizDurationSeconds: 12,
+    isQuickAnswer: true,
     quizTopic: 'Bacaan & Doa',
+    reflectiveAnswer: {
+      questionId: 'ref-1',
+      question: 'Setelah sholat Dhuha hari ini, perasaanmu…',
+      indicator: 'Keikhlasan Beribadah',
+      answer: '😞 Terpaksa / tidak nyaman',
+      needsApproach: true
+    },
     verificationStatus: 'Menunggu',
     teacherNotes: ''
   },
@@ -250,7 +266,16 @@ export const INITIAL_LOGS: DhuhaLog[] = [
     quizTaken: true,
     quizScore: 95,
     quizAttempts: 1,
+    quizDurationSeconds: 52,
+    isQuickAnswer: false,
     quizTopic: 'Fiqih Dhuha',
+    reflectiveAnswer: {
+      questionId: 'ref-8',
+      question: 'Apakah kamu mengajak teman untuk sholat Dhuha hari ini?',
+      indicator: 'Dampak Sosial Karakter (Kandidat Mentor)',
+      answer: 'Ya, dan ia ikut sholat',
+      isMentorCandidate: true
+    },
     verificationStatus: 'Menunggu',
     teacherNotes: ''
   },
@@ -357,74 +382,6 @@ export const INITIAL_LOGS: DhuhaLog[] = [
   }
 ];
 
-export const QUIZ_QUESTIONS: QuizQuestion[] = [
-  {
-    id: 'q-1',
-    topic: 'Fiqih Dhuha',
-    surahTag: 'Ad-Dhuha',
-    question: 'Kapan batas awal masuknya waktu sholat Dhuha yang utama (waktu Isyraq)?',
-    options: [
-      'Tepat saat adzan Subuh berkumandang',
-      'Sekitar 15-20 menit setelah matahari terbit sempurna setinggi satu tombak',
-      'Tepat jam 12.00 siang saat matahari berada di puncak',
-      'Setelah waktu Ashar tiba'
-    ],
-    correctIndex: 1,
-    explanation: 'Waktu Dhuha dimulai setelah matahari meninggi sekitar satu tombak (kurang lebih 15 menit setelah syuruq/terbit).'
-  },
-  {
-    id: 'q-2',
-    topic: 'Fiqih Dhuha',
-    question: 'Berapakah jumlah rakaat minimal dan maksimal yang disunnahkan dalam sholat Dhuha?',
-    options: [
-      'Minimal 1 rakaat, maksimal 3 rakaat',
-      'Minimal 2 rakaat, maksimal 8 atau 12 rakaat (dikerjakan tiap 2 rakaat salam)',
-      'Minimal 4 rakaat sekaligus tanpa salam',
-      'Harus selalu 10 rakaat genap'
-    ],
-    correctIndex: 1,
-    explanation: 'Sholat Dhuha paling sedikit 2 rakaat dan dapat dikerjakan hingga 8 atau 12 rakaat, dikerjakan 2 rakaat salam.'
-  },
-  {
-    id: 'q-3',
-    topic: 'Bacaan & Doa',
-    surahTag: 'Ad-Dhuha',
-    question: 'Dalam doa Dhuha terdapat kalimat "Allahumma inna adh-dhuha\'a dhuha-uk", apakah arti penggalan tersebut?',
-    options: [
-      'Ya Allah, sesungguhnya waktu dhuha ini adalah waktu dhuha-Mu',
-      'Ya Allah, ampunilah segala dosa kedua orang tuaku',
-      'Ya Allah, berkahilah ilmu dan sekolah kami',
-      'Ya Allah, jauhkanlah kami dari rasa malas'
-    ],
-    correctIndex: 0,
-    explanation: 'Makna kalimat tersebut adalah pengakuan bahwa keindahan dan waktu Dhuha sepenuhnya milik Allah SWT.'
-  },
-  {
-    id: 'q-4',
-    topic: 'Kisah Inspiratif',
-    question: 'Menurut hadits riwayat Muslim, sholat Dhuha 2 rakaat senilai dengan sedekah bagi berapa persendian tulang manusia?',
-    options: [
-      '30 persendian',
-      '100 persendian',
-      '360 persendian seluruh tubuh',
-      '1000 persendian'
-    ],
-    correctIndex: 2,
-    explanation: 'Rasulullah SAW bersabda bahwa setiap persendian manusia (ada 360 sendi) wajib disedekahi setiap hari, dan dua rakaat Dhuha mencukupi semuanya.'
-  },
-  {
-    id: 'q-5',
-    topic: 'Adab',
-    surahTag: 'Al-Insyirah',
-    question: 'Apa pesan utama yang diajarkan dalam Surat Al-Insyirah saat kita menghadapi kesulitan?',
-    options: [
-      'Langsung menyerah dan tidur',
-      'Yakin bahwa sesudah kesulitan pasti ada kemudahan, lalu terus berusaha dan berharap hanya kepada Allah',
-      'Menyalahkan orang lain atas masalah yang ada',
-      'Mengabaikan tugas sekolah'
-    ],
-    correctIndex: 1,
-    explanation: '"Fa inna ma\'al \'usri yusro, inna ma\'al \'usri yusro" — Sesungguhnya bersama kesulitan selalu ada kemudahan.'
-  }
-];
+export const QUIZ_QUESTIONS: QuizQuestion[] = ALL_QUIZ_QUESTIONS;
+
 

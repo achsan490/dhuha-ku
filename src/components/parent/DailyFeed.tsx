@@ -128,6 +128,24 @@ export const DailyFeed: React.FC<{ student: Student; todayLog?: DhuhaLog }> = ({
             </div>
           </div>
 
+          {/* Refleksi Hati Ananda (Kejujuran Karakter) */}
+          {todayLog.reflectiveAnswer && (
+            <div className="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50/50 border border-emerald-200/80 rounded-xl text-xs flex items-start gap-2.5">
+              <span className="text-base">🪞</span>
+              <div className="flex-1">
+                <span className="text-[11px] font-bold text-emerald-950 block">
+                  Refleksi Kejujuran Hati Ananda Hari Ini:
+                </span>
+                <p className="text-xs text-emerald-900 italic mt-0.5">
+                  "{todayLog.reflectiveAnswer.answer}"
+                </p>
+                <span className="text-[10px] text-emerald-700 mt-1 block">
+                  Indikator: {todayLog.reflectiveAnswer.indicator} • Dituangkan secara jujur tanpa tekanan nilai
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Catatan Khusus dari Guru untuk Orang Tua */}
           {todayLog.teacherNotes && (
             <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl flex items-start gap-3">

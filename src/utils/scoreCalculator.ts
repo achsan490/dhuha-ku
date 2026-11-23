@@ -153,7 +153,24 @@ export function generateParentCharacterReport(
     ? outstandingTraits.join(' serta ') 
     : 'semangat belajar yang terus bertumbuh';
 
-  const narrativeText = `Alhamdulillah, sepanjang periode ini Ananda ${student.name} telah melaksanakan Sholat Dhuha sebanyak ${metrics.prayerDays} hari dari total ${metrics.effectiveDays} hari efektif${metrics.udzurDays > 0 ? ` (dengan ${metrics.udzurDays} hari udzur syar'i)` : ''}. Surat yang paling sering dibaca adalah ${topSurah}. Karakter yang paling menonjol pada Ananda adalah ${traitStr}. Rata-rata skor kuis pemahaman ananda mencapai ${understandingScore}/100.`;
+  // Evaluasi Data Reflektif Terbaru
+  const latestReflectiveLog = [...logs]
+    .filter(l => l.studentId === student.id && l.reflectiveAnswer)
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+
+  let reflectiveNarrative = '';
+  if (latestReflectiveLog?.reflectiveAnswer) {
+    const ans = latestReflectiveLog.reflectiveAnswer;
+    if (ans.needsApproach) {
+      reflectiveNarrative = ` Berdasarkan refleksi diri yang jujur, Ananda masih merasakan sholat sebagai anjuran luar (tahap pembiasaan). Mari berikan apresiasi hangat tanpa tekanan di rumah agar tumbuh rasa keikhlasan dari dalam hati.`;
+    } else if (ans.isMentorCandidate) {
+      reflectiveNarrative = ` MasyaAllah, Ananda memiliki jiwa kepemimpinan & sosial yang baik, aktif mengajak temannya untuk bersama-sama melaksanakan sholat Dhuha.`;
+    } else if (ans.answer.toLowerCase().includes('dekat dengan allah') || ans.answer.toLowerCase().includes('sendiri')) {
+      reflectiveNarrative = ` Ananda bulan ini lebih sering sholat Dhuha karena dorongan kesadaran diri sendiri untuk mendekatkan diri kepada Allah SWT.`;
+    }
+  }
+
+  const narrativeText = `Alhamdulillah, sepanjang periode ini Ananda ${student.name} telah melaksanakan Sholat Dhuha sebanyak ${metrics.prayerDays} hari dari total ${metrics.effectiveDays} hari efektif${metrics.udzurDays > 0 ? ` (dengan ${metrics.udzurDays} hari udzur syar'i)` : ''}. Surat yang paling sering dibaca adalah ${topSurah}. Karakter yang paling menonjol pada Ananda adalah ${traitStr}.${reflectiveNarrative}`;
 
   // Rekomendasi untuk Orang Tua di Rumah
   let recommendationForHome = `Ajak Ananda membaca surat ${topSurah} bersama Ayah/Bunda saat pagi hari di akhir pekan, serta berikan apresiasi atas konsistensi sholatnya.`;
