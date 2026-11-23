@@ -80,7 +80,7 @@ export const LoginPage: React.FC = () => {
                   value={identifier}
                   onChange={e => setIdentifier(e.target.value)}
                   placeholder="Contoh: 20240101 (NIS) atau guru"
-                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                  className="w-full pl-9 pr-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm sm:text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
                   autoFocus
                 />
               </div>
@@ -102,7 +102,7 @@ export const LoginPage: React.FC = () => {
                   value={pin}
                   onChange={e => setPin(e.target.value)}
                   placeholder="Masukkan PIN (Default: 1234)"
-                  className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                  className="w-full pl-9 pr-3 py-3 sm:py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm sm:text-xs text-slate-800 font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
                 />
               </div>
             </div>

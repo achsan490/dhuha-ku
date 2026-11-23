@@ -65,8 +65,8 @@ export const ClassHeatmap: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid of Student Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      {/* Grid of Student Cards (Mobile 2-Cols) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
         {students.map(s => {
           const { label, color, log } = getStudentStatus(s.id);
           const isPending = log?.verificationStatus === 'Menunggu';

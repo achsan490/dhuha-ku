@@ -89,59 +89,59 @@ export const StudentView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Student Greeting Banner */}
-      <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+      {/* Student Greeting Banner (Mobile Optimized) */}
+      <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-md relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-6">
           <Sparkles className="w-48 h-48" />
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 relative z-10">
+          <div className="flex items-center gap-3 sm:gap-4">
             <img
               src={student.avatar}
               alt={student.name}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-white/50 shadow-md"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl object-cover border-2 border-white/50 shadow-sm flex-shrink-0"
             />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs bg-white/20 text-emerald-100 px-2 py-0.5 rounded-full font-medium">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-[11px] sm:text-xs bg-white/20 text-emerald-100 px-2 py-0.5 rounded-full font-medium">
                   {student.className} • NIS {student.nis}
                 </span>
-                <span className="text-xs bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] sm:text-xs bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full font-bold">
                   Siswa
                 </span>
               </div>
-              <h2 className="text-2xl font-black tracking-tight mt-1">
+              <h2 className="text-lg sm:text-2xl font-black tracking-tight mt-0.5 sm:mt-1">
                 Ahlan wa Sahlan, {student.name}!
               </h2>
-              <p className="text-xs text-emerald-100 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-emerald-100 mt-0.5 hidden sm:block">
                 "Sholat Dhuha adalah pembuka pintu rezeki dan sedekah bagi seluruh persendian kita."
               </p>
             </div>
           </div>
 
           {/* Status Hari Ini Banner */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 text-right w-full sm:w-auto">
-            <div className="text-[10px] text-emerald-200 uppercase tracking-wider font-semibold">
-              Status Pengisian Hari Ini
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 text-left sm:text-right w-full sm:w-auto">
+            <div className="text-[9px] sm:text-[10px] text-emerald-200 uppercase tracking-wider font-semibold">
+              Status Jurnal Hari Ini
             </div>
             {todayLog ? (
-              <div className="mt-1 flex items-center justify-end gap-1.5">
+              <div className="mt-1 flex items-center justify-start sm:justify-end gap-1.5">
                 {todayLog.verificationStatus === 'Disetujui' ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-bold bg-emerald-400 text-emerald-950 px-2.5 py-1 rounded-xl shadow-sm">
+                  <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-emerald-400 text-emerald-950 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl shadow-xs">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     Terverifikasi Guru
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-xs font-bold bg-amber-300 text-amber-950 px-2.5 py-1 rounded-xl shadow-sm">
+                  <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold bg-amber-300 text-amber-950 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl shadow-xs">
                     <Clock className="w-3.5 h-3.5" />
-                    Menunggu Verifikasi Guru
+                    Menunggu Verifikasi
                   </span>
                 )}
               </div>
             ) : (
-              <div className="mt-1 text-xs font-bold text-amber-200 flex items-center justify-end gap-1">
-                <AlertCircle className="w-4 h-4 text-amber-300" />
+              <div className="mt-1 text-xs font-bold text-amber-200 flex items-center justify-start sm:justify-end gap-1">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-300" />
                 Belum Mengisi Hari Ini
               </div>
             )}

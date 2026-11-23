@@ -21,7 +21,7 @@ const MainContent: React.FC = () => {
       <Navbar />
 
       {/* Main Dynamic Content - Terisolasi 100% Sesuai Akun Login */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 pb-16">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-6 pb-20 pb-safe">
         {currentRole === 'siswa' && <StudentView />}
         {currentRole === 'guru' && <TeacherView />}
         {currentRole === 'ortu' && <ParentView />}

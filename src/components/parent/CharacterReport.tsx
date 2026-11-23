@@ -181,18 +181,18 @@ export const CharacterReport: React.FC<{ student: Student; logs: DhuhaLog[] }> =
               Peta Konsistensi Sebulan (Heatmap Kalender Karakter)
             </h4>
           </div>
-          <div className="flex items-center gap-3 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px]">
             <span className="flex items-center gap-1 font-semibold text-emerald-700">
-              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block" /> {totalSholat} Hari Sholat
+              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block" /> {totalSholat} Sholat
             </span>
             {totalUdzur > 0 && (
               <span className="flex items-center gap-1 font-semibold text-amber-700">
-                <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" /> {totalUdzur} Hari Udzur
+                <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" /> {totalUdzur} Udzur
               </span>
             )}
             {totalTidak > 0 && (
               <span className="flex items-center gap-1 font-semibold text-rose-700">
-                <span className="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block" /> {totalTidak} Hari Terlewat
+                <span className="w-2.5 h-2.5 rounded-sm bg-rose-400 inline-block" /> {totalTidak} Alpa
               </span>
             )}
             <span className="flex items-center gap-1 text-slate-400">
@@ -201,8 +201,19 @@ export const CharacterReport: React.FC<{ student: Student; logs: DhuhaLog[] }> =
           </div>
         </div>
 
-        {/* 28 Kotak Hari */}
-        <div className="grid grid-cols-7 sm:grid-cols-14 gap-1.5 pt-1">
+        {/* Header Hari Kalender */}
+        <div className="grid grid-cols-7 gap-1 sm:gap-1.5 text-center text-[9px] font-bold text-slate-400 uppercase tracking-wider pt-1">
+          <span>Sen</span>
+          <span>Sel</span>
+          <span>Rab</span>
+          <span>Kam</span>
+          <span>Jum</span>
+          <span>Sab</span>
+          <span>Ahd</span>
+        </div>
+
+        {/* 28 Kotak Hari Kalender */}
+        <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
           {monthlyDays.map(d => {
             let bg = 'bg-slate-200 text-slate-400';
             let title = `Tgl ${d.day}: Hari Libur`;

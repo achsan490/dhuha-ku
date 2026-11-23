@@ -60,12 +60,12 @@ export const DhuhaForm: React.FC<DhuhaFormProps> = ({
         <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
           Status Dhuha Hari Ini
         </label>
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-2">
           {/* YA */}
           <button
             type="button"
             onClick={() => setStatus('Ya')}
-            className={`p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all ${
+            className={`p-2.5 sm:p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
               status === 'Ya'
                 ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold ring-2 ring-emerald-500/20'
                 : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-slate-50/50'
@@ -78,14 +78,14 @@ export const DhuhaForm: React.FC<DhuhaFormProps> = ({
             >
               <Check className="w-4 h-4 stroke-[3]" />
             </div>
-            <span className="text-xs">Alhamdulillah Sholat</span>
+            <span className="text-[11px] sm:text-xs font-bold leading-tight">Sholat</span>
           </button>
 
           {/* UDZUR */}
           <button
             type="button"
             onClick={() => setStatus('Udzur')}
-            className={`p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all ${
+            className={`p-2.5 sm:p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
               status === 'Udzur'
                 ? 'border-amber-500 bg-amber-50 text-amber-900 font-bold ring-2 ring-amber-500/20'
                 : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-slate-50/50'
@@ -98,14 +98,14 @@ export const DhuhaForm: React.FC<DhuhaFormProps> = ({
             >
               <ShieldAlert className="w-4 h-4" />
             </div>
-            <span className="text-xs">Berhalangan (Udzur)</span>
+            <span className="text-[11px] sm:text-xs font-bold leading-tight">Udzur</span>
           </button>
 
           {/* TIDAK */}
           <button
             type="button"
             onClick={() => setStatus('Tidak')}
-            className={`p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all ${
+            className={`p-2.5 sm:p-3.5 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
               status === 'Tidak'
                 ? 'border-rose-500 bg-rose-50 text-rose-900 font-bold ring-2 ring-rose-500/20'
                 : 'border-slate-200 hover:border-slate-300 text-slate-600 bg-slate-50/50'
@@ -118,7 +118,7 @@ export const DhuhaForm: React.FC<DhuhaFormProps> = ({
             >
               <X className="w-4 h-4 stroke-[3]" />
             </div>
-            <span className="text-xs">Belum / Terlewat</span>
+            <span className="text-[11px] sm:text-xs font-bold leading-tight">Terlewat</span>
           </button>
         </div>
 
@@ -159,19 +159,20 @@ export const DhuhaForm: React.FC<DhuhaFormProps> = ({
               </label>
               <span className="text-[11px] text-slate-500">Minimal 2, Sunnah hingga 12</span>
             </div>
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
               {[2, 4, 6, 8, 10, 12].map(r => (
                 <button
                   key={r}
                   type="button"
                   onClick={() => setRakaat(r)}
-                  className={`py-2 rounded-xl text-xs font-bold border transition-all ${
+                  className={`py-2 sm:py-2.5 rounded-xl border flex flex-col items-center justify-center transition-all cursor-pointer ${
                     rakaat === r
                       ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
                       : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300'
                   }`}
                 >
-                  {r} Rakaat
+                  <span className="text-sm font-black leading-none">{r}</span>
+                  <span className="text-[9px] opacity-75 mt-0.5">Rakaat</span>
                 </button>
               ))}
             </div>
