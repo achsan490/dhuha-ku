@@ -4,12 +4,13 @@ import { ClassHeatmap } from './ClassHeatmap';
 import { VerificationQueue } from './VerificationQueue';
 import { AwarenessRadar } from './AwarenessRadar';
 import { StudentManagement } from './StudentManagement';
-import { Users, CheckCircle2, Clock, AlertCircle, Sparkles, Send, LayoutDashboard, UserCheck } from 'lucide-react';
+import { QuestionBankViewer } from './QuestionBankViewer';
+import { Users, CheckCircle2, Clock, AlertCircle, Sparkles, Send, LayoutDashboard, UserCheck, BookOpen } from 'lucide-react';
 
 export const TeacherView: React.FC = () => {
   const { students, logs, todayStr, showToast } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'rekap' | 'santri'>('rekap');
+  const [activeTab, setActiveTab] = useState<'rekap' | 'santri' | 'bank_soal'>('rekap');
 
   const totalStudents = students.length;
   const todayLogs = logs.filter(l => l.date === todayStr);
@@ -88,19 +89,19 @@ export const TeacherView: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigasi Tab Guru: Rekap vs Kelola Santri */}
-      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1 shadow-xs">
+      {/* Navigasi Tab Guru: Rekap vs Kelola Santri vs Bank Soal */}
+      <div className="flex flex-wrap border-b border-slate-200 bg-white rounded-2xl p-1 shadow-xs gap-1">
         <button
           type="button"
           onClick={() => setActiveTab('rekap')}
-          className={`flex-1 py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer ${
+          className={`flex-1 min-w-[140px] py-2.5 px-3 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer ${
             activeTab === 'rekap'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <LayoutDashboard className="w-4 h-4" />
-          <span>Rekap & Verifikasi Jurnal Dhuha</span>
+          <span>Rekap & Verifikasi Jurnal</span>
           {pendingCount > 0 && (
             <span className="bg-amber-400 text-amber-950 text-[10px] px-1.5 py-0.2 rounded-full font-black">
               {pendingCount}
@@ -111,19 +112,32 @@ export const TeacherView: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('santri')}
-          className={`flex-1 py-2.5 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer ${
+          className={`flex-1 min-w-[140px] py-2.5 px-3 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer ${
             activeTab === 'santri'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <UserCheck className="w-4 h-4" />
-          <span>Kelola Data Santri & Akun Ortu ({totalStudents})</span>
+          <span>Kelola Santri & Ortu ({totalStudents})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('bank_soal')}
+          className={`flex-1 min-w-[140px] py-2.5 px-3 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition cursor-pointer ${
+            activeTab === 'bank_soal'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Bank Soal Lengkap (48 Butir)</span>
         </button>
       </div>
 
       {/* Konten Berdasarkan Tab Aktif */}
-      {activeTab === 'rekap' ? (
+      {activeTab === 'rekap' && (
         <div className="space-y-6">
           {/* Antrean Verifikasi (Paling Penting untuk Guru) */}
           <VerificationQueue />
@@ -134,9 +148,17 @@ export const TeacherView: React.FC = () => {
           {/* Rekap Skor Kesadaran (Indikator Guru) */}
           <AwarenessRadar />
         </div>
-      ) : (
+      )}
+
+      {activeTab === 'santri' && (
         <div className="space-y-6">
           <StudentManagement />
+        </div>
+      )}
+
+      {activeTab === 'bank_soal' && (
+        <div className="space-y-6">
+          <QuestionBankViewer />
         </div>
       )}
     </div>
