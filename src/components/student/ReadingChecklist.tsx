@@ -1,7 +1,7 @@
 import React from 'react';
 import { SURAH_OPTIONS } from '../../data/mockData';
 import { HafalanStatus } from '../../types';
-import { BookOpen, Star, Sparkles, CheckSquare, Award, Brain } from 'lucide-react';
+import { BookOpen, Star, Sparkles, CheckSquare, Award } from 'lucide-react';
 
 interface ReadingChecklistProps {
   surahList: string[];
@@ -14,9 +14,6 @@ interface ReadingChecklistProps {
   setHafalanSurah: (s: string) => void;
   hafalanStatus: HafalanStatus;
   setHafalanStatus: (h: HafalanStatus) => void;
-  onOpenQuiz: (surahTag?: string) => void;
-  quizTaken: boolean;
-  quizScore?: number;
 }
 
 export const ReadingChecklist: React.FC<ReadingChecklistProps> = ({
@@ -29,10 +26,7 @@ export const ReadingChecklist: React.FC<ReadingChecklistProps> = ({
   hafalanSurah,
   setHafalanSurah,
   hafalanStatus,
-  setHafalanStatus,
-  onOpenQuiz,
-  quizTaken,
-  quizScore
+  setHafalanStatus
 }) => {
   const toggleSurah = (surahName: string) => {
     if (surahList.includes(surahName)) {
@@ -221,51 +215,6 @@ export const ReadingChecklist: React.FC<ReadingChecklistProps> = ({
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Kuis Penguat Kesadaran Trigger Banner */}
-      <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-2xl p-4 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-3 text-center sm:text-left">
-          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0">
-            <Brain className="w-6 h-6 text-amber-200" />
-          </div>
-          <div>
-            <div className="flex items-center justify-center sm:justify-start gap-1.5">
-              <span className="font-extrabold text-sm">3. Kuis Kesadaran Dhuha</span>
-              <span className="bg-amber-400 text-amber-950 font-black text-[9px] px-1.5 py-0.5 rounded uppercase">
-                3 PG + 1 Refleksi
-              </span>
-            </div>
-            <p className="text-xs text-emerald-100 mt-0.5">
-              Bukan ujian yang menegangkan, tapi penguat pemahaman fiqih & refleksi kejujuran hati.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {quizTaken ? (
-            <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/20 text-xs">
-              <span className="text-emerald-100">Skor Terakhir:</span>
-              <span className="font-black text-amber-300 text-sm">{quizScore}/100</span>
-              <button
-                type="button"
-                onClick={() => onOpenQuiz(favoriteSurah || 'Ad-Dhuha')}
-                className="bg-white text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-lg hover:bg-emerald-50 transition ml-1"
-              >
-                Ulangi
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => onOpenQuiz(favoriteSurah || 'Ad-Dhuha')}
-              className="bg-amber-400 hover:bg-amber-300 text-amber-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5"
-            >
-              <span>Mulai Kuis (±2 Menit)</span>
-              <span>→</span>
-            </button>
-          )}
         </div>
       </div>
     </div>
