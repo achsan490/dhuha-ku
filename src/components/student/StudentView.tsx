@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { DhuhaForm } from './DhuhaForm';
 import { ReadingChecklist } from './ReadingChecklist';
-import { DailyQuizSection } from './DailyQuizSection';
 import { BadgesCard } from './BadgesCard';
+import { QuizModal } from './QuizModal';
 import { QuestionBankViewer } from '../teacher/QuestionBankViewer';
-import { DhuhaStatus, TimeSlot, LocationType, HafalanStatus, QuizTopic, StudentReflectiveEntry } from '../../types';
-import { Send, CheckCircle2, AlertCircle, Clock, ShieldCheck, Sparkles, BookOpen, FileCheck } from 'lucide-react';
+import { DhuhaStatus, TimeSlot, LocationType, HafalanStatus } from '../../types';
+import { Send, CheckCircle2, AlertCircle, Clock, ShieldCheck, Sparkles, BookOpen, Brain } from 'lucide-react';
 
 export const StudentView: React.FC = () => {
-  const { activeStudentId, students, getTodayLog, submitDhuhaLog } = useApp();
+  const { activeStudentId, students, getTodayLog, submitDhuhaLog, openQuizModal } = useApp();
   const student = students.find(s => s.id === activeStudentId) || students[0];
   const todayLog = getTodayLog(student.id);
 
-  // Tab: Jurnal & Kuis Harian vs Belajar Bank Soal
+  // Tab: Jurnal vs Belajar Bank Soal
   const [activeTab, setActiveTab] = useState<'jurnal' | 'bank_soal'>('jurnal');
 
   // Local Form State
@@ -44,25 +44,6 @@ export const StudentView: React.FC = () => {
     todayLog?.hafalanStatus || 'Lancar'
   );
 
-  // State Kuis & Refleksi Harian
-  const [quizState, setQuizState] = useState<{
-    quizTaken: boolean;
-    quizScore?: number;
-    quizTopic?: QuizTopic;
-    quizAttempts?: number;
-    quizDurationSeconds?: number;
-    isQuickAnswer?: boolean;
-    reflectiveAnswer?: StudentReflectiveEntry;
-  }>({
-    quizTaken: todayLog?.quizTaken ?? false,
-    quizScore: todayLog?.quizScore,
-    quizTopic: todayLog?.quizTopic,
-    quizAttempts: todayLog?.quizAttempts,
-    quizDurationSeconds: todayLog?.quizDurationSeconds,
-    isQuickAnswer: todayLog?.isQuickAnswer,
-    reflectiveAnswer: todayLog?.reflectiveAnswer
-  });
-
   // Sync state when active student changes
   useEffect(() => {
     if (todayLog) {
@@ -78,15 +59,6 @@ export const StudentView: React.FC = () => {
       setHasDoaAfterDhuha(todayLog.hasDoaAfterDhuha);
       setHafalanSurah(todayLog.hafalanSurah || '');
       setHafalanStatus(todayLog.hafalanStatus || 'Lancar');
-      setQuizState({
-        quizTaken: todayLog.quizTaken,
-        quizScore: todayLog.quizScore,
-        quizTopic: todayLog.quizTopic,
-        quizAttempts: todayLog.quizAttempts,
-        quizDurationSeconds: todayLog.quizDurationSeconds,
-        isQuickAnswer: todayLog.isQuickAnswer,
-        reflectiveAnswer: todayLog.reflectiveAnswer
-      });
     } else {
       setStatus('Ya');
       setRakaat(4);
@@ -97,15 +69,6 @@ export const StudentView: React.FC = () => {
       setSurahList(['Ad-Dhuha']);
       setFavoriteSurah('Ad-Dhuha');
       setHasDoaAfterDhuha(true);
-      setQuizState({
-        quizTaken: false,
-        quizScore: undefined,
-        quizTopic: undefined,
-        quizAttempts: undefined,
-        quizDurationSeconds: undefined,
-        isQuickAnswer: undefined,
-        reflectiveAnswer: undefined
-      });
     }
   }, [student.id, todayLog]);
 
@@ -125,13 +88,13 @@ export const StudentView: React.FC = () => {
       hasDoaAfterDhuha: status === 'Ya' ? hasDoaAfterDhuha : false,
       hafalanSurah: status === 'Ya' ? hafalanSurah : undefined,
       hafalanStatus: status === 'Ya' ? hafalanStatus : undefined,
-      quizTaken: quizState.quizTaken || todayLog?.quizTaken,
-      quizScore: quizState.quizScore ?? todayLog?.quizScore,
-      quizAttempts: quizState.quizAttempts ?? todayLog?.quizAttempts,
-      quizDurationSeconds: quizState.quizDurationSeconds ?? todayLog?.quizDurationSeconds,
-      isQuickAnswer: quizState.isQuickAnswer ?? todayLog?.isQuickAnswer,
-      quizTopic: quizState.quizTopic ?? todayLog?.quizTopic,
-      reflectiveAnswer: quizState.reflectiveAnswer ?? todayLog?.reflectiveAnswer
+      quizTaken: todayLog?.quizTaken,
+      quizScore: todayLog?.quizScore,
+      quizAttempts: todayLog?.quizAttempts,
+      quizDurationSeconds: todayLog?.quizDurationSeconds,
+      isQuickAnswer: todayLog?.isQuickAnswer,
+      quizTopic: todayLog?.quizTopic,
+      reflectiveAnswer: todayLog?.reflectiveAnswer
     });
   };
 
@@ -207,7 +170,7 @@ export const StudentView: React.FC = () => {
         )}
       </div>
 
-      {/* Navigasi Tab Siswa: Jurnal & Kuis vs Belajar Bank Soal */}
+      {/* Navigasi Tab Siswa: Jurnal Ringkas vs Belajar Bank Soal */}
       <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1 shadow-xs gap-1">
         <button
           type="button"
@@ -218,8 +181,8 @@ export const StudentView: React.FC = () => {
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
-          <FileCheck className="w-4 h-4" />
-          <span>Form Jurnal & Kuis Harian</span>
+          <Sparkles className="w-4 h-4" />
+          <span>Form Jurnal Dhuha</span>
         </button>
 
         <button
@@ -232,7 +195,7 @@ export const StudentView: React.FC = () => {
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>Belajar Bank Soal (48 Butir)</span>
+          <span>Bank Soal Lengkap (48 Butir)</span>
         </button>
       </div>
 
@@ -276,16 +239,50 @@ export const StudentView: React.FC = () => {
             />
           )}
 
-          {/* Section 3: KUIS PEMAHAMAN & REFLEKSI (LANGSUNG TAMPIL DI HALAMAN!) */}
+          {/* Section 3: KUIS DALAM BENTUK ALERT/POP-UP AGAR HALAMAN TETAP RINGKAS */}
           {status !== 'Tidak' && (
-            <DailyQuizSection
-              quizTaken={quizState.quizTaken}
-              quizScore={quizState.quizScore}
-              quizAttempts={quizState.quizAttempts}
-              reflectiveAnswer={quizState.reflectiveAnswer}
-              onQuizCompleted={data => setQuizState(data)}
-              surahTag={favoriteSurah}
-            />
+            <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 rounded-2xl p-5 text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3.5">
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0 text-amber-300">
+                  <Brain className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-sm sm:text-base text-white">
+                      3. Kuis Kesadaran Dhuha & Refleksi Harian
+                    </h3>
+                    <span className="bg-amber-400 text-amber-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                      Pop-up Kuis
+                    </span>
+                  </div>
+                  <p className="text-xs text-emerald-100 mt-1 max-w-md leading-relaxed">
+                    Dikerjakan melalui jendela pop-up interaktif agar halaman tetap rapi dan ringkas.
+                  </p>
+
+                  {todayLog?.quizTaken && (
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
+                      <span className="bg-white/20 px-2.5 py-0.5 rounded-lg text-emerald-100 font-medium">
+                        Skor: <strong className="text-amber-300">{todayLog.quizScore}/100</strong>
+                      </span>
+                      {todayLog.reflectiveAnswer && (
+                        <span className="bg-white/10 px-2.5 py-0.5 rounded-lg text-emerald-100 italic text-[11px]">
+                          Refleksi: "{todayLog.reflectiveAnswer.answer}"
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => openQuizModal(favoriteSurah || 'Ad-Dhuha')}
+                className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 active:scale-95 text-amber-950 font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-amber-900" />
+                <span>{todayLog?.quizTaken ? 'Ulangi Kuis (Pop-up)' : 'Buka Kuis Pop-up (±2 Menit)'}</span>
+              </button>
+            </div>
           )}
 
           {/* Submit Action Button */}
@@ -297,7 +294,7 @@ export const StudentView: React.FC = () => {
                 </span>
               ) : (
                 <span>
-                  Data jurnal beserta hasil kuis & refleksi akan langsung masuk ke antrean verifikasi <strong>Ustadz Mansur</strong>.
+                  Data jurnal beserta hasil kuis akan langsung masuk ke antrean verifikasi <strong>Ustadz Mansur</strong>.
                 </span>
               )}
             </div>
@@ -324,7 +321,7 @@ export const StudentView: React.FC = () => {
                 Pusat Belajar & Bank Soal Dhuha
               </h4>
               <p className="text-emerald-800 text-[11px] mt-0.5">
-                Pelajari 48 materi fiqih, bacaan doa, adab khusyuk, dan kisah inspiratif sebelum mengisi jurnal harianmu!
+                Pelajari seluruh 48 materi fiqih, bacaan doa, adab khusyuk, dan kisah inspiratif sebelum mengisi kuis harianmu!
               </p>
             </div>
           </div>
@@ -332,6 +329,10 @@ export const StudentView: React.FC = () => {
           <QuestionBankViewer />
         </div>
       )}
+
+      {/* Quiz Modal / Alert Pop-up */}
+      <QuizModal />
     </div>
   );
 };
+

@@ -1,39 +1,46 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
-import { QUESTION_BANK_A, REFLECTIVE_QUESTIONS } from '../../data/questionBank';
+import { QUESTION_BANK_A, QUESTION_BANK_B, REFLECTIVE_QUESTIONS } from '../../data/questionBank';
 import { QuizQuestion, ReflectiveQuestion, StudentReflectiveEntry } from '../../types';
 import { X, CheckCircle, AlertCircle, HelpCircle, Trophy, RotateCcw, Clock, Sparkles, HeartHandshake } from 'lucide-react';
 
 export const QuizModal: React.FC = () => {
   const { activeQuizModal, closeQuizModal, recordQuizResult, quizSurahTag } = useApp();
 
-  // Acak & siapkan 3 Soal PG Medium + 1 Soal Reflektif
+  // Pilihan jumlah soal: 3 (Harian Kilat), 5 (Harian Lengkap), 10 (Mingguan HOTS)
+  const [quizMode, setQuizMode] = useState<3 | 5 | 10>(3);
   const [sessionSeed, setSessionSeed] = useState<number>(() => Date.now());
 
   const { pgQuestions, reflectiveQuestion } = useMemo(() => {
-    // 1. Pilih soal PG terkait surah atau acak dari Bagian A
-    let pool = [...QUESTION_BANK_A];
+    let poolA = [...QUESTION_BANK_A];
+    let poolB = [...QUESTION_BANK_B];
     let selectedPG: QuizQuestion[] = [];
 
-    if (quizSurahTag) {
-      const related = pool.filter(q => q.surahTag === quizSurahTag);
-      const others = pool.filter(q => q.surahTag !== quizSurahTag).sort(() => 0.5 - Math.random());
-      selectedPG = [...related, ...others].slice(0, 3);
+    if (quizMode === 3) {
+      if (quizSurahTag) {
+        const related = poolA.filter(q => q.surahTag === quizSurahTag);
+        const others = poolA.filter(q => q.surahTag !== quizSurahTag).sort(() => 0.5 - Math.random());
+        selectedPG = [...related, ...others].slice(0, 3);
+      } else {
+        selectedPG = poolA.sort(() => 0.5 - Math.random()).slice(0, 3);
+      }
+    } else if (quizMode === 5) {
+      selectedPG = poolA.sort(() => 0.5 - Math.random()).slice(0, 5);
     } else {
-      selectedPG = pool.sort(() => 0.5 - Math.random()).slice(0, 3);
+      // Mode 10: gabungan 5 Bagian A (Medium) + 5 Bagian B (HOTS)
+      const a = poolA.sort(() => 0.5 - Math.random()).slice(0, 5);
+      const b = poolB.sort(() => 0.5 - Math.random()).slice(0, 5);
+      selectedPG = [...a, ...b];
     }
 
-    // 2. Pilih 1 soal Reflektif dari Bagian C
     const refPool = [...REFLECTIVE_QUESTIONS].sort(() => 0.5 - Math.random());
-    const selectedRef: ReflectiveQuestion = refPool[0];
-
     return {
       pgQuestions: selectedPG,
-      reflectiveQuestion: selectedRef
+      reflectiveQuestion: refPool[0]
     };
-  }, [quizSurahTag, sessionSeed]);
+  }, [quizSurahTag, sessionSeed, quizMode]);
 
-  const totalSteps = pgQuestions.length + 1; // 3 PG + 1 Reflektif = 4
+  const totalSteps = pgQuestions.length + 1; // n PG + 1 Reflektif
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPGAnswers, setSelectedPGAnswers] = useState<Record<number, number>>({});
@@ -116,7 +123,7 @@ export const QuizModal: React.FC = () => {
   const handleSaveAndClose = () => {
     const elapsedSeconds = Math.max(10, Math.round((Date.now() - startTime) / 1000));
     // Deteksi jika pengerjaan < 15 detik (indikasi terburu-buru / asal jawab)
-    const isQuickAnswer = elapsedSeconds < 15;
+    const isQuickAnswer = elapsedSeconds < (quizMode * 4);
 
     recordQuizResult(
       finalScore,
@@ -150,7 +157,7 @@ export const QuizModal: React.FC = () => {
           </div>
           <button
             onClick={closeQuizModal}
-            className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition"
+            className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer"
             aria-label="Tutup kuis"
           >
             <X className="w-5 h-5" />
@@ -161,6 +168,39 @@ export const QuizModal: React.FC = () => {
         <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {!isFinished ? (
             <div>
+              {/* Pilihan Mode Jumlah Soal jika belum mulai menjawab */}
+              {currentIndex === 0 && Object.keys(selectedPGAnswers).length === 0 && (
+                <div className="mb-4 bg-slate-100 p-1 rounded-xl flex items-center text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setQuizMode(3)}
+                    className={`flex-1 py-1.5 rounded-lg transition cursor-pointer ${
+                      quizMode === 3 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    3 Soal (Harian)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setQuizMode(5)}
+                    className={`flex-1 py-1.5 rounded-lg transition cursor-pointer ${
+                      quizMode === 5 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    5 Soal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setQuizMode(10)}
+                    className={`flex-1 py-1.5 rounded-lg transition cursor-pointer ${
+                      quizMode === 10 ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    10 Soal (HOTS)
+                  </button>
+                </div>
+              )}
+
               {/* Progress Indicator */}
               <div className="flex items-center justify-between text-xs text-slate-500 mb-2 font-medium">
                 <span>
@@ -186,7 +226,7 @@ export const QuizModal: React.FC = () => {
                 />
               </div>
 
-              {/* TAMPILAN SOAL PG (Soal 1–3) */}
+              {/* TAMPILAN SOAL PG */}
               {!isReflectiveStep && currentPG && (
                 <div>
                   <h4 className="text-sm sm:text-base font-semibold text-slate-800 leading-snug mb-3">
@@ -216,7 +256,7 @@ export const QuizModal: React.FC = () => {
                           key={idx}
                           onClick={() => handleSelectPGOption(idx)}
                           disabled={showExplanation}
-                          className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-start gap-2.5 transition-all ${btnStyle}`}
+                          className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-start gap-2.5 transition-all cursor-pointer ${btnStyle}`}
                         >
                           <span className="w-5 h-5 rounded-full border flex-shrink-0 flex items-center justify-center text-[11px] font-bold mt-0.5">
                             {String.fromCharCode(65 + idx)}
@@ -246,7 +286,7 @@ export const QuizModal: React.FC = () => {
                 </div>
               )}
 
-              {/* TAMPILAN SOAL REFLEKTIF (Soal 4) */}
+              {/* TAMPILAN SOAL REFLEKTIF (Langkah Terakhir) */}
               {isReflectiveStep && (
                 <div className="animate-fadeIn">
                   <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3 mb-3 text-xs text-amber-900">
@@ -269,7 +309,7 @@ export const QuizModal: React.FC = () => {
                         <button
                           key={idx}
                           onClick={() => handleSelectReflectiveOption(opt)}
-                          className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center justify-between transition-all ${
+                          className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm flex items-center justify-between transition-all cursor-pointer ${
                             isChosen
                               ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-medium ring-1 ring-emerald-400'
                               : 'border-slate-200 hover:border-amber-300 hover:bg-amber-50/40 text-slate-700'
@@ -323,7 +363,7 @@ export const QuizModal: React.FC = () => {
               <div>
                 <h4 className="text-lg font-bold text-slate-800">Alhamdulillah Selesai!</h4>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Kuis pemahaman dan refleksi harianmu telah tuntas.
+                  Kuis pemahaman ({quizMode} butir) dan refleksi harianmu telah tuntas.
                 </p>
               </div>
 
@@ -367,14 +407,14 @@ export const QuizModal: React.FC = () => {
             <>
               <button
                 onClick={closeQuizModal}
-                className="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1.5"
+                className="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1.5 cursor-pointer"
               >
                 Tutup
               </button>
               {showExplanation && (
                 <button
                   onClick={handleNext}
-                  className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition"
+                  className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
                 >
                   {currentIndex < totalSteps - 1 ? 'Soal Berikutnya →' : 'Lihat Hasil Akhir'}
                 </button>
@@ -385,7 +425,7 @@ export const QuizModal: React.FC = () => {
               {!isPassed && attempts < 2 ? (
                 <button
                   onClick={handleRetry}
-                  className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-900 border border-slate-300 px-3 py-2 rounded-xl bg-white font-medium active:scale-95 transition"
+                  className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-900 border border-slate-300 px-3 py-2 rounded-xl bg-white font-medium active:scale-95 transition cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Coba Lagi (2/2)</span>
@@ -397,7 +437,7 @@ export const QuizModal: React.FC = () => {
               )}
               <button
                 onClick={handleSaveAndClose}
-                className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition ml-auto"
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition ml-auto cursor-pointer"
               >
                 Simpan & Teruskan ke Jurnal
               </button>
